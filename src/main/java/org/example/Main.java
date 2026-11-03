@@ -6,7 +6,7 @@ import java.util.HashSet;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         LocalDate datum = LocalDate.of(2026,10,29);
         JobOffer a = new JobOffer("13060-970102598-S",
                 "Ausbildung zum FIAE",
@@ -29,6 +29,9 @@ public class Main {
         test.add(b);
         System.out.println(a.equals(b));
         System.out.println("Size of hashset: " + test.size());
+        SearchCriteria c = new SearchCriteria("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4);
+        ArbeitsagenturSource as = new ArbeitsagenturSource();
+        System.out.println(as.search(c));
     }
 
 }

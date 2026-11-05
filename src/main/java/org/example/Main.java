@@ -8,9 +8,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         SearchCriteria c = new SearchCriteria("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4);
-        ArbeitsagenturSource as = new ArbeitsagenturSource();
+        JobSource source = new ArbeitsagenturSource();
 
-        List<JobOffer> jobOffers = as.search(c);
+        List<JobOffer> jobOffers = source.search(c);
 
         for (JobOffer job: jobOffers) {
             System.out.println(job);

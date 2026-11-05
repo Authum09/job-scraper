@@ -16,12 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ArbeitsagenturSource {
+public class ArbeitsagenturSource implements JobSource {
     private static final String SEARCH_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?";
     private static final String API_KEY = "jobboerse-jobsuche";
     private final HttpClient client = HttpClient.newHttpClient();
     final String DETAIL_URL = "https://www.arbeitsagentur.de/jobsuche/jobdetail/";
 
+    @Override
     public List<JobOffer> search(SearchCriteria c) throws IOException, InterruptedException {
 
         String url = buildSearchUrl(c);

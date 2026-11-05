@@ -1,20 +1,31 @@
 package org.example;
 
 import java.util.List;
+import java.util.Set;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws Exception {
+    static void main(String[] args) throws Exception {
 
-        SearchCriteria c = new SearchCriteria("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4);
+        SearchCriteria c = new SearchCriteria("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4, List.of("anwendungsentwicklung"), List.of("studium"));
         JobSource source = new ArbeitsagenturSource();
 
         List<JobOffer> jobOffers = source.search(c);
+        JobFilter filter = new JobFilter();
 
-        for (JobOffer job: jobOffers) {
+        jobOffers = filter.filter(jobOffers, c.pflicht(), c.ausschluss());
+        SeenStore seen = new SeenStore();
+
+        Set<String> seenReferenceNumbers = seen.load();
+        List<JobOffer> newOffers = jobOffers.stream().filter(s -> !seenReferenceNumbers.contains(s.getReferenznummer())).toList();
+
+        if (newOffers.isEmpty()) {
+            System.out.println("Keine neuen Angebote");
+        }
+        for (JobOffer job : newOffers) {
+            seenReferenceNumbers.add(job.getReferenznummer());
             System.out.println(job);
         }
 
+        seen.save(seenReferenceNumbers);
     }
 }

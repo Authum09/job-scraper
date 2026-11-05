@@ -20,7 +20,9 @@ public class ArbeitsagenturSource implements JobSource {
     private static final String SEARCH_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?";
     private static final String API_KEY = "jobboerse-jobsuche";
     private final HttpClient client = HttpClient.newHttpClient();
-    final String DETAIL_URL = "https://www.arbeitsagentur.de/jobsuche/jobdetail/";
+    private static final String DETAIL_URL = "https://www.arbeitsagentur.de/jobsuche/jobdetail/";
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final int PAGE_SIZE = 100;
 
     @Override
     public List<JobOffer> search(SearchCriteria c) throws IOException, InterruptedException {
@@ -33,8 +35,9 @@ public class ArbeitsagenturSource implements JobSource {
 
     private List<JobOffer> parse(String json) throws JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
         JsonNode root = objectMapper.readTree(json);
+
+        System.out.println("Maximalen Ergebenisse: " + root.path("maxErgebnisse"));
 
 
         List<JobOffer> jobOffers = new ArrayList<>();
@@ -45,7 +48,7 @@ public class ArbeitsagenturSource implements JobSource {
             String referenceNumber = job.path("referenznummer").asText();
 
             if (!publicationDate.isEmpty()) {
-                date = LocalDate.parse(job.path("datumErsteVeroeffentlichung").asText());
+                date = LocalDate.parse(publicationDate);
             }
 
 
@@ -56,6 +59,7 @@ public class ArbeitsagenturSource implements JobSource {
                     DETAIL_URL + referenceNumber,
                     date,
                     "Arbeitsagentur");
+
             jobOffers.add(jobOffer);
         }
 
@@ -67,7 +71,8 @@ public class ArbeitsagenturSource implements JobSource {
         url += "was=" + URLEncoder.encode(c.berufsbezeichnung(), StandardCharsets.UTF_8) + "&";
         url += "wo=" + URLEncoder.encode(c.ort(), StandardCharsets.UTF_8) + "&";
         url += "umkreis=" + c.umkreis() + "&";
-        url += "angebotsart=" + c.angebotsart();
+        url += "angebotsart=" + c.angebotsart() +"&";
+        url += "size=" + PAGE_SIZE;
 
         return url;
     }

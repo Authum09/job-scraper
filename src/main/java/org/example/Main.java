@@ -1,12 +1,14 @@
 package org.example;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
 public class Main {
     static void main(String[] args) throws Exception {
 
-        SearchCriteria c = new SearchCriteria("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4, List.of("anwendungsentwicklung"), List.of("studium"));
+        ConfigLoader configLoader = new ConfigLoader();
+        SearchCriteria c = configLoader.buildSearchCriteria(Path.of("config.json"));
         JobSource source = new ArbeitsagenturSource();
 
         List<JobOffer> jobOffers = source.search(c);

@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 public class Main {
-    static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         ConfigLoader configLoader = new ConfigLoader();
-        SearchCriteria c = configLoader.buildSearchCriteria(Path.of("config.json"));
+        SearchCriteria c = configLoader.load(Path.of("config.json"),SearchCriteria.class);
         JobSource source = new ArbeitsagenturSource();
+
+        TelegramConfig telegramConfig = configLoader.load(Path.of("secrets.json"), TelegramConfig.class);
+
+        TelegramNotifier notifier = new TelegramNotifier(telegramConfig.telegramToken(), telegramConfig.telegramChatId());
 
         List<JobOffer> jobOffers = source.search(c);
         JobFilter filter = new JobFilter();
@@ -18,12 +22,13 @@ public class Main {
         SeenStore seen = new SeenStore();
 
         Set<String> seenReferenceNumbers = seen.load();
-        List<JobOffer> newOffers = jobOffers.stream().filter(s -> !seenReferenceNumbers.contains(s.getReferenznummer())).toList();
+        List<JobOffer> newOffers = jobOffers.stream().filter(offer -> !seenReferenceNumbers.contains(offer.getReferenznummer())).toList();
 
         if (newOffers.isEmpty()) {
             System.out.println("Keine neuen Angebote");
         }
         for (JobOffer job : newOffers) {
+            notifier.send(job);
             seenReferenceNumbers.add(job.getReferenznummer());
             System.out.println(job);
         }

@@ -37,7 +37,7 @@ public class ArbeitsagenturSource implements JobSource {
 
         JsonNode root = objectMapper.readTree(json);
 
-        System.out.println("Maximalen Ergebenisse: " + root.path("maxErgebnisse"));
+        System.out.println("Maximalen Ergebnisse: " + root.path("maxErgebnisse"));
 
 
         List<JobOffer> jobOffers = new ArrayList<>();

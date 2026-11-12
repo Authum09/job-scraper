@@ -25,6 +25,7 @@ public class Main {
         List<JobOffer> newOffers = jobOffers.stream().filter(offer -> !seenReferenceNumbers.contains(offer.getReferenznummer())).toList();
 
         if (newOffers.isEmpty()) {
+            notifier.send("Es wurden keine neuen Angebote gefunden");
             System.out.println("Keine neuen Angebote");
         }
         for (JobOffer job : newOffers) {

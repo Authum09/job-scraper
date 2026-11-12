@@ -1,25 +1,34 @@
-package org.example;
+package de.wurow.jobtracker;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Entity
 public class JobOffer {
-    private final String referenznummer;
-    private final String titel;
-    private final String firma;
-    private final String ort;
-    private final String link;
-    private final LocalDate veroeffentlichtAm;
-    private final String quelle;
+    @Id
+    private String id;
+    private String titel;
+    private String firma;
+    private String ort;
+    private String link;
+    private LocalDate veroeffentlichtAm;
+    private String quelle;
 
-    public JobOffer (String referenznummer,
-                     String titel,
-                     String firma,
-                     String ort,
-                     String link,
-                     LocalDate veroeffentlichtAm,
-                     String quelle) {
-        this.referenznummer = referenznummer;
+    protected JobOffer() {
+
+    }
+
+    public JobOffer(String referenznummer,
+                    String titel,
+                    String firma,
+                    String ort,
+                    String link,
+                    LocalDate veroeffentlichtAm,
+                    String quelle) {
+        this.id = referenznummer;
         this.titel = titel;
         this.firma = firma;
         this.ort = ort;
@@ -28,8 +37,8 @@ public class JobOffer {
         this.quelle = quelle;
     }
 
-    public String getReferenznummer() {
-        return referenznummer;
+    public String getId() {
+        return id;
     }
 
     public String getTitel() {
@@ -56,22 +65,22 @@ public class JobOffer {
         return quelle;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        JobOffer jobOffer = (JobOffer) o;
-        return Objects.equals(referenznummer, jobOffer.referenznummer);
+        if (!(o instanceof JobOffer jobOffer)) return false;
+        return Objects.equals(id, jobOffer.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(referenznummer);
+        return Objects.hashCode(id);
     }
 
     @Override
     public String toString() {
         return "JobOffer{" +
-                "referenznummer='" + referenznummer + '\'' +
+                "id='" + id + '\'' +
                 ", titel='" + titel + '\'' +
                 ", firma='" + firma + '\'' +
                 ", ort='" + ort + '\'' +

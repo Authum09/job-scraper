@@ -1,4 +1,4 @@
-package org.example;
+package de.wurow.jobtracker;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,6 +21,7 @@ public class ArbeitsagenturSource implements JobSource {
     private static final String API_KEY = "jobboerse-jobsuche";
     private final HttpClient client = HttpClient.newHttpClient();
     private static final String DETAIL_URL = "https://www.arbeitsagentur.de/jobsuche/jobdetail/";
+    private static final String ID_PREFIX = "arbeitsagentur:";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final int PAGE_SIZE = 100;
 
@@ -52,7 +53,7 @@ public class ArbeitsagenturSource implements JobSource {
             }
 
 
-            JobOffer jobOffer = new JobOffer(referenceNumber,
+            JobOffer jobOffer = new JobOffer(ID_PREFIX + referenceNumber,
                     job.path("stellenangebotsTitel").asText(),
                     job.path("firma").asText(),
                     job.path("stellenlokationen").path(0).path("adresse").path("ort").asText(),

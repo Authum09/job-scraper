@@ -1,4 +1,4 @@
-package org.example;
+package de.wurow.jobtracker;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -22,7 +22,7 @@ public class Main {
         SeenStore seen = new SeenStore();
 
         Set<String> seenReferenceNumbers = seen.load();
-        List<JobOffer> newOffers = jobOffers.stream().filter(offer -> !seenReferenceNumbers.contains(offer.getReferenznummer())).toList();
+        List<JobOffer> newOffers = jobOffers.stream().filter(offer -> !seenReferenceNumbers.contains(offer.getId())).toList();
 
         if (newOffers.isEmpty()) {
             notifier.send("Es wurden keine neuen Angebote gefunden");
@@ -30,7 +30,7 @@ public class Main {
         }
         for (JobOffer job : newOffers) {
             notifier.send(job);
-            seenReferenceNumbers.add(job.getReferenznummer());
+            seenReferenceNumbers.add(job.getId());
             System.out.println(job);
         }
 

@@ -1,4 +1,4 @@
-package org.example;
+package de.wurow.jobtracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1,4 +1,4 @@
-package org.example;
+package de.wurow.jobtracker;
 
 public record TelegramConfig(
         String telegramToken,

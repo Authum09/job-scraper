@@ -7,18 +7,18 @@ import java.util.List;
 @Entity
 public class SearchProfile {
 
-    String berufsbezeichnung;
-    String ort;
-    int umkreis;
-    int angebotsart;
+    private String berufsbezeichnung;
+    private String ort;
+    private int umkreis;
+    private int angebotsart;
     @ElementCollection(fetch = FetchType.EAGER)
-    List<String> pflicht;
+    private List<String> pflicht;
     @ElementCollection(fetch = FetchType.EAGER)
-    List<String> ausschluss;
+    private List<String> ausschluss;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     protected SearchProfile() {
 

@@ -1,5 +1,7 @@
 package de.wurow.jobtracker;
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -8,18 +10,19 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
+@Component
 public class TelegramNotifier {
     private static final String BASE_URL = "https://api.telegram.org/bot";
     private final HttpClient client = HttpClient.newHttpClient();
     private final String token;
     private final String chatId;
 
-    public TelegramNotifier(String token, String chatId) {
-        this.token = token;
-        this.chatId = chatId;
+    public TelegramNotifier(TelegramConfig telegramConfig) {
+        this.token = telegramConfig.token();
+        this.chatId = telegramConfig.chatId();
     }
 
-    public void send(String text) throws IOException, InterruptedException {
+    private void send(String text) throws IOException, InterruptedException {
         String url = BASE_URL + token + "/sendMessage";
         String body = "chat_id=" + chatId + "&text=" + URLEncoder.encode(text, StandardCharsets.UTF_8);
 

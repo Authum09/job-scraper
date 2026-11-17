@@ -11,16 +11,18 @@ public class ScrapingService {
     private final JobFilter filter;
     private final JobOfferRepository jobOfferRepository;
     private final SearchProfileRepository searchProfileRepository;
-    //private final TelegramNotifier telegramNotifier;
+    private final TelegramNotifier telegramNotifier;
 
     public ScrapingService(JobSource source,
                            JobFilter filter,
                            JobOfferRepository jobOfferRepository,
-                           SearchProfileRepository searchProfileRepository) {
+                           SearchProfileRepository searchProfileRepository,
+                           TelegramNotifier telegramNotifier) {
         this.source = source;
         this.filter = filter;
         this.jobOfferRepository = jobOfferRepository;
         this.searchProfileRepository = searchProfileRepository;
+        this.telegramNotifier = telegramNotifier;
     }
 
     public void run() throws Exception {
@@ -34,6 +36,7 @@ public class ScrapingService {
 
 
             for (JobOffer offer: newOffers) {
+                telegramNotifier.send(offer);
                 jobOfferRepository.save(offer);
                 System.out.println(offer);
             }

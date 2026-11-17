@@ -4,5 +4,5 @@ import java.io.IOException;
 import java.util.List;
 
 public interface JobSource{
-    List<JobOffer> search(SearchCriteria c) throws IOException, InterruptedException;
+    List<JobOffer> search(SearchProfile c) throws IOException, InterruptedException;
 }

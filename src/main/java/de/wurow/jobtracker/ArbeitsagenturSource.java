@@ -3,6 +3,7 @@ package de.wurow.jobtracker;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class ArbeitsagenturSource implements JobSource {
     private static final String SEARCH_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?";
     private static final String API_KEY = "jobboerse-jobsuche";
@@ -26,7 +27,7 @@ public class ArbeitsagenturSource implements JobSource {
     private static final int PAGE_SIZE = 100;
 
     @Override
-    public List<JobOffer> search(SearchCriteria c) throws IOException, InterruptedException {
+    public List<JobOffer> search(SearchProfile c) throws IOException, InterruptedException {
 
         String url = buildSearchUrl(c);
         String json = fetch(url);
@@ -67,12 +68,12 @@ public class ArbeitsagenturSource implements JobSource {
         return jobOffers;
     }
 
-    private String buildSearchUrl(SearchCriteria c) {
+    private String buildSearchUrl(SearchProfile c) {
         String url = SEARCH_URL;
-        url += "was=" + URLEncoder.encode(c.berufsbezeichnung(), StandardCharsets.UTF_8) + "&";
-        url += "wo=" + URLEncoder.encode(c.ort(), StandardCharsets.UTF_8) + "&";
-        url += "umkreis=" + c.umkreis() + "&";
-        url += "angebotsart=" + c.angebotsart() +"&";
+        url += "was=" + URLEncoder.encode(c.getBerufsbezeichnung(), StandardCharsets.UTF_8) + "&";
+        url += "wo=" + URLEncoder.encode(c.getOrt(), StandardCharsets.UTF_8) + "&";
+        url += "umkreis=" + c.getUmkreis() + "&";
+        url += "angebotsart=" + c.getAngebotsart() +"&";
         url += "size=" + PAGE_SIZE;
 
         return url;

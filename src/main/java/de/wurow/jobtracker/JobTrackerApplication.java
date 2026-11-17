@@ -12,7 +12,20 @@ import java.util.List;
 public class JobTrackerApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(JobTrackerApplication.class, args);
+
+    }
+
+    @Bean
+    CommandLineRunner runner(ScrapingService scrapingService, SearchProfileRepository searchProfileRepository) {
+        return args -> {
+            if (searchProfileRepository.count() == 0) {
+                searchProfileRepository.save(new SearchProfile("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick",20,4,List.of("anwendungsentwicklung"),List.of("studium")));
+            }
+
+            scrapingService.run();
+        };
     }
 
 

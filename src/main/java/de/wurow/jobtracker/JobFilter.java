@@ -1,7 +1,10 @@
 package de.wurow.jobtracker;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class JobFilter {
     public List<JobOffer> filter(List<JobOffer> jobOffers, List<String> pflicht, List<String> ausschluss) {
         return jobOffers.stream().filter(offer -> passt(offer, pflicht, ausschluss)).toList();

@@ -40,4 +40,23 @@ public class ProfileController {
         SearchProfile saved = searchProfileRepository.save(request.toEntity());
         return ProfileResponse.from(saved);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        if (!searchProfileRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        searchProfileRepository.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public ProfileResponse update (@PathVariable Long id, @Valid @RequestBody ProfileRequest request) {
+        SearchProfile profile = searchProfileRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        profile.update(request.berufsbezeichnung(), request.ort(), request.umkreis(), request.angebotsart(), request.pflicht(), request.ausschluss());
+
+        return ProfileResponse.from(searchProfileRepository.save(profile));
+    }
 }

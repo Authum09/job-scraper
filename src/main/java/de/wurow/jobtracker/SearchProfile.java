@@ -2,6 +2,7 @@ package de.wurow.jobtracker;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -64,5 +65,20 @@ public class SearchProfile {
 
     public Long getId() {
         return id;
+    }
+
+
+    public void update(String berufsbezeichnung,
+                       String ort,
+                       int umkreis,
+                       int angebotsart,
+                       List<String> pflicht,
+                       List<String> ausschluss) {
+        this.berufsbezeichnung = berufsbezeichnung;
+        this.ort = ort;
+        this.umkreis = umkreis;
+        this.angebotsart = angebotsart;
+        this.pflicht = new ArrayList<>(pflicht);
+        this.ausschluss = new ArrayList<>(ausschluss);
     }
 }

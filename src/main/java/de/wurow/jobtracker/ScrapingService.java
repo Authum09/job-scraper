@@ -1,5 +1,7 @@
 package de.wurow.jobtracker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ public class ScrapingService {
     private final JobOfferRepository jobOfferRepository;
     private final SearchProfileRepository searchProfileRepository;
     private final TelegramNotifier telegramNotifier;
+    private static final Logger log = LoggerFactory.getLogger(ScrapingService.class);
 
     public ScrapingService(JobSource source,
                            JobFilter filter,
@@ -29,17 +32,22 @@ public class ScrapingService {
         List<SearchProfile> profiles = searchProfileRepository.findAll();
 
         for (SearchProfile profile: profiles) {
-            List<JobOffer> found =  source.search(profile);
-            List<JobOffer> filtered = filter.filter(found, profile.getPflicht(),profile.getAusschluss());
+            try {
+                List<JobOffer> found =  source.search(profile);
+                List<JobOffer> filtered = filter.filter(found, profile.getPflicht(),profile.getAusschluss());
 
-            List<JobOffer> newOffers = filtered.stream().filter(offer -> !jobOfferRepository.existsById(offer.getId())).toList();
+                List<JobOffer> newOffers = filtered.stream().filter(offer -> !jobOfferRepository.existsById(offer.getId())).toList();
 
 
-            for (JobOffer offer: newOffers) {
-                telegramNotifier.send(offer);
-                jobOfferRepository.save(offer);
-                System.out.println(offer);
+                for (JobOffer offer: newOffers) {
+                    telegramNotifier.send(offer);
+                    jobOfferRepository.save(offer);
+                    System.out.println(offer);
+                }
+            } catch (Exception e) {
+                log.error("Suche für Profil {} fehlgeschlagen", profile.getId(), e);
             }
+
         }
     }
 }

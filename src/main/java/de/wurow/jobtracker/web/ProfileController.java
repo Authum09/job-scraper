@@ -31,7 +31,7 @@ public class ProfileController {
     public ProfileResponse getProfile(@PathVariable Long id) {
         return searchProfileRepository.findById(id)
                 .map(ProfileResponse::from)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("Profil " + id + " nicht gefunden"));
     }
 
     @PostMapping
@@ -45,15 +45,15 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         if (!searchProfileRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Profil " + id + " nicht gefunden");
         }
         searchProfileRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public ProfileResponse update (@PathVariable Long id, @Valid @RequestBody ProfileRequest request) {
+    public ProfileResponse update(@PathVariable Long id, @Valid @RequestBody ProfileRequest request) {
         SearchProfile profile = searchProfileRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("Profil " + id + " nicht gefunden"));
 
         profile.update(request.berufsbezeichnung(), request.ort(), request.umkreis(), request.angebotsart(), request.pflicht(), request.ausschluss());
 

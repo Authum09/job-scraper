@@ -1,5 +1,6 @@
 package de.wurow.jobtracker;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,13 +20,18 @@ public class JobTrackerApplication {
     }
 
     @Bean
-    CommandLineRunner runner(ScrapingService scrapingService, SearchProfileRepository searchProfileRepository) {
+    CommandLineRunner runner(ScrapingService scrapingService,
+                             SearchProfileRepository searchProfileRepository,
+                             @Value("${scraping.run-on-startup:true}") boolean runOnStartup) {
         return args -> {
             if (searchProfileRepository.count() == 0) {
-                searchProfileRepository.save(new SearchProfile("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick",20,4,List.of("anwendungsentwicklung"),List.of("studium")));
+                searchProfileRepository.save(new SearchProfile("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4, List.of("anwendungsentwicklung"), List.of("studium")));
             }
 
-            scrapingService.run();
+            System.out.println("runOnStartp: " + runOnStartup);
+            if (runOnStartup) {
+                scrapingService.run();
+            }
         };
     }
 

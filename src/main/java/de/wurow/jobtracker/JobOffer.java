@@ -1,6 +1,8 @@
 package de.wurow.jobtracker;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
 import java.time.LocalDate;
@@ -16,6 +18,9 @@ public class JobOffer {
     private String link;
     private LocalDate veroeffentlichtAm;
     private String quelle;
+
+    @Enumerated(EnumType.STRING)
+    private OfferStatus status;
 
     protected JobOffer() {
 
@@ -35,6 +40,7 @@ public class JobOffer {
         this.link = link;
         this.veroeffentlichtAm = veroeffentlichtAm;
         this.quelle = quelle;
+        status = OfferStatus.NEU;
     }
 
     public String getId() {
@@ -65,6 +71,9 @@ public class JobOffer {
         return quelle;
     }
 
+    public OfferStatus getStatus() {
+        return status;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -87,6 +96,11 @@ public class JobOffer {
                 ", link='" + link + '\'' +
                 ", veroeffentlichtAm=" + veroeffentlichtAm +
                 ", quelle='" + quelle + '\'' +
+                ", status=" + status +
                 '}';
+    }
+
+    public void changeStatus(OfferStatus newStatus) {
+        status = newStatus;
     }
 }

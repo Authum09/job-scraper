@@ -1,11 +1,10 @@
 package de.wurow.jobtracker.web;
 
 
+import de.wurow.jobtracker.JobOffer;
 import de.wurow.jobtracker.JobOfferRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +32,15 @@ public class OfferController {
                 .map(OfferResponse::from)
                 .orElseThrow(() -> new NotFoundException("Angebot " + id + " nicht gefunden"));
 
+    }
+    @PatchMapping("/{id}")
+    public OfferResponse updateStatus(@PathVariable String id, @Valid @RequestBody StatusUpdateRequest request) {
+        JobOffer offer = jobOfferRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Profil " + id + " nicht gefunden"));
+
+        offer.changeStatus(request.status());
+
+        return OfferResponse.from(jobOfferRepository.save(offer));
     }
 
 

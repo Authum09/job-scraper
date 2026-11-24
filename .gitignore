@@ -46,3 +46,4 @@ build/
 HELP.md
 
 data/
+/http-test/

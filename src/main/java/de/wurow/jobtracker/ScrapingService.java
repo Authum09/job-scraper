@@ -14,6 +14,7 @@ public class ScrapingService {
     private final JobOfferRepository jobOfferRepository;
     private final SearchProfileRepository searchProfileRepository;
     private final TelegramNotifier telegramNotifier;
+
     private static final Logger log = LoggerFactory.getLogger(ScrapingService.class);
 
     public ScrapingService(JobSource source,
@@ -28,7 +29,7 @@ public class ScrapingService {
         this.telegramNotifier = telegramNotifier;
     }
 
-    public void run() throws Exception {
+    public void run() {
         List<SearchProfile> profiles = searchProfileRepository.findAll();
 
         for (SearchProfile profile: profiles) {
@@ -42,7 +43,7 @@ public class ScrapingService {
                 for (JobOffer offer: newOffers) {
                     telegramNotifier.send(offer);
                     jobOfferRepository.save(offer);
-                    System.out.println(offer);
+                    log.info("Neues Angebot gesendet: {}", offer.getId());
                 }
             } catch (Exception e) {
                 log.error("Suche für Profil {} fehlgeschlagen", profile.getId(), e);

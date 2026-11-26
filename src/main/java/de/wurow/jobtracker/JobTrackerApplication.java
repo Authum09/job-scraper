@@ -21,21 +21,5 @@ public class JobTrackerApplication {
 
     }
 
-    @Bean
-    CommandLineRunner runner(ScrapingService scrapingService,
-                             SearchProfileRepository searchProfileRepository,
-                             @Value("${scraping.run-on-startup:true}") boolean runOnStartup) {
-        return args -> {
-            if (searchProfileRepository.count() == 0) {
-                searchProfileRepository.save(new SearchProfile("Fachinformatiker für Anwendungsentwicklung", "Oer-Erkenschwick", 20, 4, List.of("anwendungsentwicklung"), List.of("studium")));
-            }
-
-            System.out.println("runOnStartp: " + runOnStartup);
-            if (runOnStartup) {
-                scrapingService.run();
-            }
-        };
-    }
-
 
 }

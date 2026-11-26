@@ -67,7 +67,7 @@ class JobFilterTest {
     }
 
     @Test
-    void excludedKeywordsWinsOverRequiredKeyword(){
+    void excludedKeywordsWinsOverRequiredKeywords(){
         List<JobOffer> offers = List.of(offer("studium fachinformatiker anwendungsentwicklung"));
 
         List<JobOffer> result = filter.filter(offers,List.of("anwendungsentwicklung"),List.of("studium"));

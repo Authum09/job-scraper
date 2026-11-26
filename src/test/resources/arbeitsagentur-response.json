@@ -1,0 +1,46 @@
+{
+  "ergebnisliste": [
+    {
+      "stellenangebotsart": "AUSBILDUNG",
+      "stellenangebotsTitel": "Ausbildung zum Fachinformatiker für Anwendungsentwicklung (m/w/d)",
+      "firma": "Beispiel GmbH",
+      "referenznummer": "10000-1111111111-S",
+      "datumErsteVeroeffentlichung": "2026-10-15",
+      "stellenlokationen": [
+        {
+          "adresse": {
+            "plz": "44135",
+            "ort": "Dortmund",
+            "land": "DEUTSCHLAND"
+          }
+        }
+      ]
+    },
+    {
+      "stellenangebotsart": "AUSBILDUNG",
+      "stellenangebotsTitel": "Fachinformatiker*in Systemintegration",
+      "firma": "Muster AG",
+      "referenznummer": "10000-2222222222-S",
+      "stellenlokationen": [
+        {
+          "adresse": {
+            "plz": "45657",
+            "ort": "Recklinghausen, Westfalen",
+            "land": "DEUTSCHLAND"
+          }
+        }
+      ]
+    },
+    {
+      "stellenangebotsart": "AUSBILDUNG",
+      "stellenangebotsTitel": "Duales Studium Informatik B.Sc.",
+      "firma": "Test KG",
+      "referenznummer": "10000-3333333333-S",
+      "datumErsteVeroeffentlichung": "2026-11-02",
+      "stellenlokationen": []
+    }
+  ],
+  "maxErgebnisse": 3,
+  "page": 1,
+  "size": 100
+}

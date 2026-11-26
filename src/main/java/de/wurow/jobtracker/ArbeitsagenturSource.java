@@ -1,8 +1,5 @@
 package de.wurow.jobtracker;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,19 +9,20 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ArbeitsagenturSource implements JobSource {
     private static final String SEARCH_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?";
     private static final String API_KEY = "jobboerse-jobsuche";
-    private final HttpClient client = HttpClient.newHttpClient();
-    private static final String DETAIL_URL = "https://www.arbeitsagentur.de/jobsuche/jobdetail/";
-    private static final String ID_PREFIX = "arbeitsagentur:";
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private static final int PAGE_SIZE = 100;
+    private final HttpClient client = HttpClient.newHttpClient();
+    private final ArbeitsagenturParser parser;
+
+
+    public ArbeitsagenturSource(ArbeitsagenturParser parser) {
+        this.parser = parser;
+    }
 
     @Override
     public List<JobOffer> search(SearchProfile c) throws IOException, InterruptedException {
@@ -32,48 +30,16 @@ public class ArbeitsagenturSource implements JobSource {
         String url = buildSearchUrl(c);
         String json = fetch(url);
 
-        return parse(json);
+        return parser.parse(json);
     }
 
-    private List<JobOffer> parse(String json) throws JsonProcessingException {
-
-        JsonNode root = objectMapper.readTree(json);
-
-        System.out.println("Maximalen Ergebnisse: " + root.path("maxErgebnisse"));
-
-
-        List<JobOffer> jobOffers = new ArrayList<>();
-
-        for (JsonNode job : root.path("ergebnisliste")) {
-            LocalDate date = null;
-            String publicationDate = job.path("datumErsteVeroeffentlichung").asText();
-            String referenceNumber = job.path("referenznummer").asText();
-
-            if (!publicationDate.isEmpty()) {
-                date = LocalDate.parse(publicationDate);
-            }
-
-
-            JobOffer jobOffer = new JobOffer(ID_PREFIX + referenceNumber,
-                    job.path("stellenangebotsTitel").asText(),
-                    job.path("firma").asText(),
-                    job.path("stellenlokationen").path(0).path("adresse").path("ort").asText(),
-                    DETAIL_URL + referenceNumber,
-                    date,
-                    "Arbeitsagentur");
-
-            jobOffers.add(jobOffer);
-        }
-
-        return jobOffers;
-    }
 
     private String buildSearchUrl(SearchProfile c) {
         String url = SEARCH_URL;
         url += "was=" + URLEncoder.encode(c.getBerufsbezeichnung(), StandardCharsets.UTF_8) + "&";
         url += "wo=" + URLEncoder.encode(c.getOrt(), StandardCharsets.UTF_8) + "&";
         url += "umkreis=" + c.getUmkreis() + "&";
-        url += "angebotsart=" + c.getAngebotsart() +"&";
+        url += "angebotsart=" + c.getAngebotsart() + "&";
         url += "size=" + PAGE_SIZE;
 
         return url;
